@@ -1,0 +1,64 @@
+Color Palette:
+• Primary Blue: `#0052A5`
+• Primary Orange: `#F26522`
+• Secondary Blue (hover state): `#004080`
+• Secondary Orange (hover state): `#E55511`
+• Background White: `#FFFFFF`
+• Light Gray (for backgrounds): `#F3F4F6`
+• Medium Gray (for borders): `#E5E7EB`
+• Dark Gray (for text): `#374151`
+• Muted Text: `#6B7280`
+Typography:
+• Font Family: System default sans-serif (you may consider adding a specific font like Inter or Roboto for consistency)
+• Font Sizes:
+
+- Heading 1 (h1): 24px (1.5rem)
+- Heading 2 (h2): 20px (1.25rem)
+- Body Text: 16px (1rem)
+- Small Text: 14px (0.875rem)
+• Font Weights:
+- Regular: 400
+- Medium: 500
+- Semibold: 600
+- Bold: 700
+
+
+
+Spacing:
+• Base unit: 4px
+• Common spacings: 4px, 8px, 16px, 24px, 32px, 48px
+Border Radius:
+• Small: 4px
+• Medium: 8px
+• Large: 16px
+• Full: 9999px (for circular elements)
+Shadows:
+• Light: 0 1px 3px rgba(0, 0, 0, 0.1)
+• Medium: 0 4px 6px rgba(0, 0, 0, 0.1)
+• Heavy: 0 10px 15px rgba(0, 0, 0, 0.1)
+Icons:
+• Use Lucide React icons for consistency
+• Icon sizes: 16px, 20px, 24px
+Buttons:
+• Primary: Background `#F26522`, Text white
+• Secondary: Background white, Border `#E5E7EB`, Text `#374151`
+• Hover states: Darken background color by 10%
+• Disabled state: Reduce opacity to 50%
+Input Fields:
+• Border: 1px solid `#E5E7EB`
+• Border Radius: 8px
+• Focus state: Border color `#0052A5`, add a light blue glow
+Cards:
+• Background: White
+• Border: 1px solid `#E5E7EB`
+• Border Radius: 8px
+• Box Shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+Transitions:
+• Duration: 200ms
+• Easing: ease-in-out
+Responsive Breakpoints:
+• Mobile: Up to 640px
+• Tablet: 641px to 1024px
+• Desktop: 1025px and above
+Map Theme:
+• Keep the default OpenStreetMap style for now, but consider creating a custom style that matches your application's color scheme in the future
