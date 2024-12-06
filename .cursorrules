@@ -1,3 +1,113 @@
+General Guidlines:
+- You're an expert in Next.js, React, Tailwind CSS, and shadcn/ui.
+- You're an expert in ride sharing/maps apps/transit apps from both a product development and user experience perspective.
+- Always think what's the best experience for the user.
+- Always follow clean, accessible, and performant code.
+- Code needs to be maintainable and scalable.
+
+# LauderGO Shuttle Tracker - Project Overview
+
+## App Name & Purpose
+LauderGO Shuttle Tracker - A modern web application to help Fort Lauderdale residents and visitors easily track, plan, and manage their shuttle transportation across the city's free community shuttle service.
+
+## Tech Stack
+### Frontend
+- Next.js with App Router for modern, server-side rendered React applications
+- React for component-based UI development
+- Tailwind CSS for styling
+- shadcn/ui for consistent, accessible components
+- Mapbox or Google Maps API for route visualization
+
+### Backend
+- Next.js API routes for server-side functionality
+- PostgreSQL with Supabase for:
+  - Real-time GPS tracking data
+  - Schedule and route information
+  - Anonymous route preferences (localStorage)
+- WebSocket connections for real-time shuttle tracking updates
+
+## Main Features
+### Route Planning & Management
+- Interactive map interface showing all shuttle routes
+- Real-time GPS tracking of shuttle locations
+- Route search with origin/destination input
+- Route scheduling with upcoming departure times
+- Temporary route bookmarking (localStorage)
+- Route details including estimated travel times and stop sequences
+
+### Core Experience
+- Anonymous access to all core features
+- Route planning and visualization
+- Real-time shuttle location updates
+- Locally stored preferences
+- Mobile-responsive interface
+
+### Administrative Features
+- Real-time shuttle tracking management
+- Schedule updates and management
+- Route modification capabilities
+- Usage analytics and reporting
+
+## Design Principles
+- Clean, intuitive interface prioritizing ease of use
+- Mobile-first responsive design
+- Consistent branding with City of Fort Lauderdale guidelines
+- Accessibility compliance (WCAG 2.1)
+- Clear information hierarchy
+
+## Performance Goals
+- Initial page load under 2 seconds
+- Real-time updates with minimal latency
+- Offline functionality for basic route information
+- Smooth map interactions and transitions
+- Optimal mobile performance
+
+## Scalability Considerations
+- Architecture designed to support future integration with:
+  - Additional transportation services
+  - Bus routes
+  - Other municipal transit systems
+- Database structure allowing for service expansion
+- API design supporting multiple transportation types
+
+## Security & Privacy
+- Anonymous usage tracking
+- Data encryption for sensitive information
+- Regular security audits
+- Privacy-focused data collection
+- Compliance with local government data standards
+
+## Code Quality Standards
+- TypeScript for type safety
+- Component-based architecture
+- Comprehensive testing strategy
+  - Unit tests
+  - Integration tests
+  - End-to-end testing
+- Consistent code style and documentation
+- Regular code reviews
+- Version control best practices
+
+## Monitoring & Analytics
+- Real-time system health monitoring
+- Usage analytics and reporting
+- Performance metrics tracking
+- Error tracking and logging
+- Anonymous feedback collection
+
+## Future Expansion Possibilities
+- User account creation and management
+- Saved routes and preferences syncing
+- Personalized route history
+- Route favorites and reminders
+- Mobile app development
+- Payment system integration
+- Multi-language support
+- Advanced route optimization
+- Integration with popular navigation apps
+- Integration with other city transportation services
+
+
 Color Palette:
 • Primary Blue: `#0052A5`
 • Primary Orange: `#F26522`
