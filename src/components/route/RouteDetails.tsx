@@ -22,8 +22,8 @@ export function RouteDetails({ route }: RouteDetailsProps) {
         <div className="max-h-[400px] overflow-y-auto pr-2 space-y-6">
           {/* Timeline container */}
           <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-[7px] top-[24px] bottom-[24px] w-[2px] bg-[#E5E7EB]" />
+            {/* Vertical line - adjusted to stop before last icon */}
+            <div className="absolute left-[7px] top-[28px] bottom-[44px] w-[2px] bg-[#E5E7EB]" />
 
             {/* Stops */}
             {route.stops.map((stop, index) => {
@@ -31,9 +31,10 @@ export function RouteDetails({ route }: RouteDetailsProps) {
               const isLast = index === route.stops.length - 1;
               
               return (
-                <div key={index} className="flex items-start gap-4 relative pb-6">
-                  {/* Icon */}
-                  <div className="relative z-10">
+                <div key={index} className="flex items-center gap-4 relative pb-6">
+                  {/* Icon container with appropriate spacing */}
+                  <div className={`relative z-10 flex items-center justify-center w-4 h-4 bg-white
+                    ${isLast ? 'mt-4' : ''}`}>
                     {isFirst && (
                       <Circle className="w-4 h-4 text-[#0052A5] fill-[#0052A5]" />
                     )}
@@ -45,8 +46,8 @@ export function RouteDetails({ route }: RouteDetailsProps) {
                     )}
                   </div>
 
-                  {/* Stop details */}
-                  <div className="flex-1">
+                  {/* Stop details - aligned with adjusted icons */}
+                  <div className={`flex-1 ${isLast ? 'mt-4' : ''}`}>
                     <div className="font-medium text-[#374151]">
                       {stop.name}
                     </div>
@@ -57,8 +58,8 @@ export function RouteDetails({ route }: RouteDetailsProps) {
                     )}
                   </div>
 
-                  {/* Time */}
-                  <div className="text-sm font-medium text-[#374151]">
+                  {/* Time - aligned with adjusted content */}
+                  <div className={`text-sm font-medium text-[#374151] ${isLast ? 'mt-4' : ''}`}>
                     {stop.time}
                   </div>
                 </div>
