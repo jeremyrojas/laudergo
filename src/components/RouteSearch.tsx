@@ -23,7 +23,8 @@ interface Location {
 interface LocationInputProps {
   placeholder: string;
   value: string;
-  onPlaceSelect: (place: google.maps.places.Autocomplete) => void;
+  onPlaceSelect: (autocomplete: google.maps.places.Autocomplete) => void;
+  onInputChange: (value: string) => void;
 }
 
 // Components
@@ -33,24 +34,37 @@ const LocationIcon = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const LocationInput = ({ placeholder, value, onPlaceSelect }: LocationInputProps) => (
-  <Autocomplete
-    onLoad={onPlaceSelect}
-    bounds={BOUNDS}
-    restrictions={{ country: "us" }}
-    options={{
-      fields: ["formatted_address", "geometry", "name"],
-      strictBounds: true,
-    }}
-  >
-    <input
-      type="text"
-      placeholder={placeholder}
-      defaultValue={value}
-      className="w-full px-4 py-3 text-base text-[#374151] placeholder:text-[#6B7280] border border-[#E5E7EB] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#0052A5] focus:border-[#0052A5] transition-all duration-200"
-    />
-  </Autocomplete>
-);
+const LocationInput = ({ placeholder, value, onPlaceSelect, onInputChange }: LocationInputProps) => {
+  const [autocomplete, setAutocomplete] = React.useState<google.maps.places.Autocomplete | null>(null);
+
+  const handleLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    setAutocomplete(autocomplete);
+    // Add place_changed listener
+    autocomplete.addListener('place_changed', () => {
+      onPlaceSelect(autocomplete);
+    });
+  };
+
+  return (
+    <Autocomplete
+      onLoad={handleLoad}
+      bounds={BOUNDS}
+      restrictions={{ country: "us" }}
+      options={{
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: true,
+      }}
+    >
+      <input
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onInputChange(e.target.value)}
+        className="w-full px-4 py-3 text-base text-[#374151] placeholder:text-[#6B7280] border border-[#E5E7EB] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#0052A5] focus:border-[#0052A5] transition-all duration-200"
+      />
+    </Autocomplete>
+  );
+};
 
 interface RouteSearchProps {
   onRouteSelect: (start: Location | null, end: Location | null) => void;
@@ -59,39 +73,54 @@ interface RouteSearchProps {
 export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   const [startLocation, setStartLocation] = React.useState<Location | null>(null);
   const [endLocation, setEndLocation] = React.useState<Location | null>(null);
+  const [startInput, setStartInput] = React.useState('');
+  const [endInput, setEndInput] = React.useState('');
   const [showRoutes, setShowRoutes] = React.useState(false);
 
   const handleStartPlaceSelect = (autocomplete: google.maps.places.Autocomplete) => {
     const place = autocomplete.getPlace();
     if (place?.geometry?.location) {
-      setStartLocation({
+      const location = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
         address: place.formatted_address || '',
-      });
+      };
+      setStartLocation(location);
+      setStartInput(location.address);
     }
   };
 
   const handleEndPlaceSelect = (autocomplete: google.maps.places.Autocomplete) => {
     const place = autocomplete.getPlace();
     if (place?.geometry?.location) {
-      setEndLocation({
+      const location = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
         address: place.formatted_address || '',
-      });
+      };
+      setEndLocation(location);
+      setEndInput(location.address);
     }
   };
 
   const handleFindRoutes = () => {
-    onRouteSelect(startLocation, endLocation);
-    setShowRoutes(true);
+    if (startLocation && endLocation) {
+      onRouteSelect(startLocation, endLocation);
+      setShowRoutes(true);
+    }
   };
 
   const handleSwapLocations = () => {
     setStartLocation(endLocation);
     setEndLocation(startLocation);
+    setStartInput(endInput);
+    setEndInput(startInput);
   };
+
+  // Check if both locations are actually selected
+  const areLocationsSelected = React.useMemo(() => {
+    return Boolean(startLocation && endLocation);
+  }, [startLocation, endLocation]);
 
   return (
     <div className="absolute top-4 left-4 z-10 w-[440px] font-sans">
@@ -111,13 +140,15 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
             <div className="space-y-4">
               <LocationInput
                 placeholder="Choose starting point, or click on the map..."
-                value={startLocation?.address || ''}
+                value={startInput}
                 onPlaceSelect={handleStartPlaceSelect}
+                onInputChange={setStartInput}
               />
               <LocationInput
                 placeholder="Choose destination..."
-                value={endLocation?.address || ''}
+                value={endInput}
                 onPlaceSelect={handleEndPlaceSelect}
+                onInputChange={setEndInput}
               />
             </div>
 
@@ -137,7 +168,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
           <div className="px-8 mt-4">
             <button 
               onClick={handleFindRoutes}
-              disabled={!startLocation || !endLocation}
+              disabled={!areLocationsSelected}
               className="w-full bg-[#F26522] hover:bg-[#E55511] text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] disabled:opacity-50 disabled:cursor-not-allowed font-medium text-base"
             >
               <Search className="h-5 w-5" />
