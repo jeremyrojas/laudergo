@@ -35,11 +35,7 @@ const LocationIcon = ({ children }: { children: React.ReactNode }) => (
 );
 
 const LocationInput = ({ placeholder, value, onPlaceSelect, onInputChange }: LocationInputProps) => {
-  const [autocomplete, setAutocomplete] = React.useState<google.maps.places.Autocomplete | null>(null);
-
   const handleLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    setAutocomplete(autocomplete);
-    // Add place_changed listener
     autocomplete.addListener('place_changed', () => {
       onPlaceSelect(autocomplete);
     });
@@ -76,6 +72,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   const [startInput, setStartInput] = React.useState('');
   const [endInput, setEndInput] = React.useState('');
   const [showRoutes, setShowRoutes] = React.useState(false);
+  const [selectedRouteIndex, setSelectedRouteIndex] = React.useState(0);
 
   const handleStartPlaceSelect = (autocomplete: google.maps.places.Autocomplete) => {
     const place = autocomplete.getPlace();
@@ -177,20 +174,58 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
           </div>
 
           {showRoutes && (
-            <div className="px-8 mt-4">
-              <div className="p-4 border border-[#E5E7EB] rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
+            <div className="px-8 mt-4 space-y-3">
+              {/* Best Route Option */}
+              <div 
+                className={`p-4 ${selectedRouteIndex === 0 ? 'border-2 border-[#0052A5]' : 'border border-[#E5E7EB]'} rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer`}
+                onClick={() => setSelectedRouteIndex(0)}
+              >
                 <div className="flex items-center justify-between mb-2">
+                  <span className="text-lg font-semibold text-[#374151]">2:05 PM—2:25 PM</span>
+                  <span className="text-lg font-semibold text-[#374151]">30 min</span>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-[#0052A5]">Beach Link</span>
+                </div>
+                {selectedRouteIndex === 0 && (
+                  <button 
+                    className="text-[#0052A5] font-medium text-sm hover:text-[#004080] transition-colors duration-200 drop-shadow-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    Details
+                  </button>
+                )}
+              </div>
+
+              {/* Alternative Route with Transfer */}
+              <div 
+                className={`p-4 ${selectedRouteIndex === 1 ? 'border-2 border-[#0052A5]' : 'border border-[#E5E7EB]'} rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer`}
+                onClick={() => setSelectedRouteIndex(1)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-lg font-semibold text-[#374151]">2:00 PM—2:45 PM</span>
+                  <span className="text-lg font-semibold text-[#374151]">45 min</span>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-medium">2:05 PM—2:25 PM</span>
-                    <span className="text-[#6B7280]">30 min</span>
+                    <span className="text-sm font-medium text-[#0052A5]">Downtown Link</span>
+                    <span className="text-sm text-[#6B7280]">→</span>
+                    <span className="text-sm font-medium text-[#0052A5]">Beach Link</span>
                   </div>
+                  <span className="text-sm text-[#6B7280]">1 transfer</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#0052A5] text-white text-sm font-medium">
-                    1
-                  </div>
-                  <span className="text-sm text-[#6B7280]">RECOMMENDED ROUTE</span>
-                </div>
+                {selectedRouteIndex === 1 && (
+                  <button 
+                    className="text-[#0052A5] font-medium text-sm hover:text-[#004080] transition-colors duration-200 drop-shadow-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    Details
+                  </button>
+                )}
               </div>
             </div>
           )}
