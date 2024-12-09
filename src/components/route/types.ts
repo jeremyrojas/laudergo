@@ -12,6 +12,12 @@ export interface RouteSegment {
   schedule: string;
 }
 
+export interface Stop {
+  name: string;
+  time: string;
+  arrivalTime?: string;
+}
+
 export interface RouteOption {
   id: string;
   segments: RouteSegment[];
@@ -19,11 +25,11 @@ export interface RouteOption {
   departureTime: string;
   arrivalTime: string;
   numTransfers: number;
+  stops: Stop[];
 }
 
 export interface RouteDetailsProps {
   route: RouteOption;
-  onBack: () => void;
 }
 
 export interface RouteCardProps {
