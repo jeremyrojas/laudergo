@@ -84,6 +84,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   const [showRoutes, setShowRoutes] = React.useState(false);
   const [selectedRouteIndex, setSelectedRouteIndex] = React.useState(0);
   const [showDetails, setShowDetails] = React.useState(false);
+  const [departureType, setDepartureType] = React.useState<'now' | 'later'>('now');
 
   // Add console.logs for debugging
   const handleStartPlaceSelect = (place: google.maps.places.PlaceResult) => {
@@ -244,9 +245,35 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
                 </div>
               </div>
 
+              {/* Time Selection Buttons */}
+              {areLocationsSelected && (
+                <div className="mt-3 mb-3 px-8 flex gap-2">
+                  <button
+                    onClick={() => setDepartureType('now')}
+                    className={`flex-1 py-1.5 px-4 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                      departureType === 'now'
+                        ? 'bg-[#F26522] hover:bg-[#E55511] text-white'
+                        : 'border border-[#E5E7EB] hover:bg-[#F3F4F6] text-[#374151]'
+                    }`}
+                  >
+                    Leave Now
+                  </button>
+                  <button
+                    onClick={() => setDepartureType('later')}
+                    className={`flex-1 py-1.5 px-4 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                      departureType === 'later'
+                        ? 'bg-[#F26522] hover:bg-[#E55511] text-white'
+                        : 'border border-[#E5E7EB] hover:bg-[#F3F4F6] text-[#374151]'
+                    }`}
+                  >
+                    Depart At
+                  </button>
+                </div>
+              )}
+
               {/* Route List */}
               {showRoutes && !showDetails && (
-                <div className="px-8 mt-6 space-y-3">
+                <div className="mt-2 px-8 space-y-3">
                   {MOCK_ROUTES.map((route, index) => (
                     <RouteCard
                       key={index}
