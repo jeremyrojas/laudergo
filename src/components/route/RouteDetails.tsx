@@ -37,7 +37,12 @@ interface RouteOption {
   stops: Stop[];
 }
 
-export function RouteDetails({ route }: { route: RouteOption }) {
+interface RouteDetailsProps {
+  route: RouteOption;
+  onBack: () => void;
+}
+
+export const RouteDetails = ({ route, onBack }: RouteDetailsProps) => {
   const [selectedTime, setSelectedTime] = useState<string>("1:55 PM");
   
   const departureTimes = ["1:55 PM", "2:15 PM", "2:35 PM", "2:55 PM"];

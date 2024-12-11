@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Circle, MapPin, MoreVertical, Search, ArrowUpDown } from 'lucide-react';
+import { Circle, MapPin, MoreVertical, Search, ArrowUpDown, ArrowLeft } from 'lucide-react';
 import { Autocomplete } from '@react-google-maps/api';
 import { RouteList } from './RouteList';
 import { RouteDetails } from './RouteDetails';
@@ -21,7 +21,7 @@ const BOUNDS = {
 interface LocationInputProps {
   placeholder: string;
   value: string;
-  onPlaceSelect: (autocomplete: google.maps.places.Autocomplete) => void;
+  onPlaceSelect: (place: google.maps.places.PlaceResult) => void;
   onInputChange: (value: string) => void;
 }
 
@@ -31,20 +31,33 @@ const LocationIcon = ({ children }: { children: React.ReactNode }) => (
 );
 
 const LocationInput = ({ placeholder, value, onPlaceSelect, onInputChange }: LocationInputProps) => {
-  const handleLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    autocomplete.addListener('place_changed', () => {
-      onPlaceSelect(autocomplete);
-    });
+  const [autocomplete, setAutocomplete] = React.useState<google.maps.places.Autocomplete | null>(null);
+
+  const handlePlaceChanged = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      if (place?.place_id) {
+        onPlaceSelect(place);
+      }
+    }
   };
 
   return (
     <Autocomplete
-      onLoad={handleLoad}
+      onLoad={(autoComplete) => {
+        setAutocomplete(autoComplete);
+        autoComplete.setFields([
+          'formatted_address',
+          'geometry',
+          'name',
+          'place_id'
+        ]);
+      }}
+      onPlaceChanged={handlePlaceChanged}
       bounds={BOUNDS}
       restrictions={{ country: "us" }}
       options={{
-        fields: ["formatted_address", "geometry", "name"],
-        strictBounds: true,
+        strictBounds: true
       }}
     >
       <input
@@ -71,9 +84,67 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   const [selectedRouteIndex, setSelectedRouteIndex] = React.useState(0);
   const [selectedRoute, setSelectedRoute] = React.useState<RouteOption | null>(null);
 
-  // ... existing place select handlers ...
+  // Add console.logs for debugging
+  const handleStartPlaceSelect = (place: google.maps.places.PlaceResult) => {
+    console.log('Start location selected');
+    console.log('Place:', place);
+    
+    if (place?.geometry?.location) {
+      const location = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        address: place.formatted_address || '',
+      };
+      
+      console.log('Start location:', location);
+      setStartLocation(location);
+      setStartInput(location.address);
+      
+      // If end location exists, update route
+      if (endLocation) {
+        console.log('End location exists, updating route');
+        onRouteSelect(location, endLocation);
+        setShowRoutes(true);
+      }
+    }
+  };
+
+  const handleEndPlaceSelect = (place: google.maps.places.PlaceResult) => {
+    console.log('Destination selected');
+    console.log('Place:', place);
+    
+    if (place?.geometry?.location && startLocation) {
+      console.log('Valid place and start location exists');
+      const endLocation = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        address: place.formatted_address || '',
+      };
+      
+      console.log('End location:', endLocation);
+      setEndLocation(endLocation);
+      setEndInput(endLocation.address);
+      
+      // Immediately trigger route search
+      console.log('Triggering route search');
+      onRouteSelect(startLocation, endLocation);
+      setShowRoutes(true);
+    }
+  };
+
+  // Add useEffect to monitor state changes
+  React.useEffect(() => {
+    console.log('State updated:', {
+      startLocation,
+      endLocation,
+      showRoutes,
+      startInput,
+      endInput
+    });
+  }, [startLocation, endLocation, showRoutes, startInput, endInput]);
 
   const handleFindRoutes = () => {
+    console.log('Find routes clicked', { startLocation, endLocation });
     if (startLocation && endLocation) {
       onRouteSelect(startLocation, endLocation);
       setShowRoutes(true);
@@ -81,20 +152,71 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   };
 
   const handleRouteDetails = (route: RouteOption) => {
+    console.log('Route details clicked:', route);
     setSelectedRoute(route);
+    setShowRoutes(false);
   };
 
   const handleBackToRoutes = () => {
+    console.log('Back to routes clicked');
     setSelectedRoute(null);
+    setShowRoutes(true);
   };
+
+  const handleSwapLocations = () => {
+    const tempStart = startLocation;
+    const tempStartInput = startInput;
+    
+    setStartLocation(endLocation);
+    setEndLocation(tempStart);
+    setStartInput(endInput);
+    setEndInput(tempStartInput);
+
+    if (startLocation && endLocation) {
+      onRouteSelect(endLocation, startLocation);
+    }
+  };
+
+  const areLocationsSelected = React.useMemo(() => {
+    return Boolean(startLocation && endLocation);
+  }, [startLocation, endLocation]);
 
   return (
     <div className="absolute top-4 left-4 z-10 w-[440px] font-sans">
       <Card className="bg-white border-[#E5E7EB] rounded-lg shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
         <CardContent className="p-6">
-          <h1 className="text-2xl font-bold text-center text-[#0052A5] mb-6">LauderGO!</h1>
-          
-          {!selectedRoute ? (
+          {selectedRoute ? (
+            <div className="relative">
+              {/* Back button */}
+              <button
+                onClick={handleBackToRoutes}
+                className="absolute -left-2 top-3 p-2 hover:bg-[#F3F4F6] rounded-full transition-colors duration-200"
+                aria-label="Back to search"
+              >
+                <ArrowLeft className="w-5 h-5 text-[#0052A5]" />
+              </button>
+              
+              {/* Minimized Search Display */}
+              <div className="px-8 pl-12 mb-6">
+                <div className="p-3 border border-[#E5E7EB] rounded-lg bg-[#F3F4F6]">
+                  <div className="flex items-center gap-2 text-sm text-[#374151]">
+                    <Circle className="w-3 h-3 text-[#6B7280]" />
+                    <span className="truncate">{startInput}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-[#374151] mt-2">
+                    <MapPin className="w-3 h-3 text-[#6B7280]" />
+                    <span className="truncate">{endInput}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Route Details */}
+              <RouteDetails 
+                route={selectedRoute} 
+                onBack={handleBackToRoutes}
+              />
+            </div>
+          ) : (
             <>
               <div className="relative px-8">
                 {/* Left Icons */}
@@ -154,11 +276,6 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
                 />
               )}
             </>
-          ) : (
-            <RouteDetails
-              route={selectedRoute}
-              onBack={handleBackToRoutes}
-            />
           )}
         </CardContent>
       </Card>
