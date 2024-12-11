@@ -45,6 +45,10 @@ interface RouteDetailsProps {
 export const RouteDetails = ({ route, onBack }: RouteDetailsProps) => {
   const [selectedTime, setSelectedTime] = useState<string>("1:55 PM");
   
+  if (!route || !route.stops || !route.stops.length) {
+    return null;
+  }
+
   const departureTimes = ["1:55 PM", "2:15 PM", "2:35 PM", "2:55 PM"];
 
   return (

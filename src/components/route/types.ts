@@ -8,7 +8,6 @@ export interface RouteSegment {
   routeName: string;
   departureTime: string;
   arrivalTime: string;
-  stops: string[];
   schedule: string;
 }
 
@@ -36,12 +35,10 @@ export interface RouteCardProps {
   route: RouteOption;
   isSelected: boolean;
   onClick: () => void;
-  onDetailsClick: () => void;
 }
 
 export interface RouteListProps {
   routes: RouteOption[];
   selectedRouteIndex: number;
-  onRouteSelect: (index: number) => void;
-  onDetailsClick: (route: RouteOption) => void;
+  onDetailsClick: (index: number) => void;
 } 

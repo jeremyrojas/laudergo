@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useLoadScript, GoogleMap, Libraries, DirectionsRenderer } from '@react-google-maps/api';
-import RouteSearch from './RouteSearch';
+import RouteSearch from './route/RouteSearch';
 
 const libraries: Libraries = ['places'];
 

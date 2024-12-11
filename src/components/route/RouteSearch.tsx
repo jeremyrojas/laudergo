@@ -6,8 +6,9 @@ import { Circle, MapPin, MoreVertical, Search, ArrowUpDown, ArrowLeft } from 'lu
 import { Autocomplete } from '@react-google-maps/api';
 import { RouteList } from './RouteList';
 import { RouteDetails } from './RouteDetails';
-import type { Location, RouteOption } from './types';
+import type { Location } from './types';
 import { MOCK_ROUTES } from '@/lib/mockRoutes';
+import { RouteCard } from './RouteCard';
 
 // Constants
 const BOUNDS = {
@@ -82,7 +83,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
   const [endInput, setEndInput] = React.useState('');
   const [showRoutes, setShowRoutes] = React.useState(false);
   const [selectedRouteIndex, setSelectedRouteIndex] = React.useState(0);
-  const [selectedRoute, setSelectedRoute] = React.useState<RouteOption | null>(null);
+  const [showDetails, setShowDetails] = React.useState(false);
 
   // Add console.logs for debugging
   const handleStartPlaceSelect = (place: google.maps.places.PlaceResult) => {
@@ -143,24 +144,13 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
     });
   }, [startLocation, endLocation, showRoutes, startInput, endInput]);
 
-  const handleFindRoutes = () => {
-    console.log('Find routes clicked', { startLocation, endLocation });
-    if (startLocation && endLocation) {
-      onRouteSelect(startLocation, endLocation);
-      setShowRoutes(true);
-    }
-  };
-
-  const handleRouteDetails = (route: RouteOption) => {
-    console.log('Route details clicked:', route);
-    setSelectedRoute(route);
-    setShowRoutes(false);
+  const handleRouteClick = (index: number) => {
+    setSelectedRouteIndex(index);
+    setShowDetails(true);
   };
 
   const handleBackToRoutes = () => {
-    console.log('Back to routes clicked');
-    setSelectedRoute(null);
-    setShowRoutes(true);
+    setShowDetails(false);
   };
 
   const handleSwapLocations = () => {
@@ -185,7 +175,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
     <div className="absolute top-4 left-4 z-10 w-[440px] font-sans">
       <Card className="bg-white border-[#E5E7EB] rounded-lg shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
         <CardContent className="p-6">
-          {selectedRoute ? (
+          {showDetails ? (
             <div className="relative">
               {/* Back button */}
               <button
@@ -212,7 +202,7 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
 
               {/* Route Details */}
               <RouteDetails 
-                route={selectedRoute} 
+                route={MOCK_ROUTES[selectedRouteIndex]} 
                 onBack={handleBackToRoutes}
               />
             </div>
@@ -254,26 +244,18 @@ export default function RouteSearch({ onRouteSelect }: RouteSearchProps) {
                 </div>
               </div>
 
-              {/* Search Button */}
-              <div className="px-8 mt-4">
-                <button 
-                  onClick={handleFindRoutes}
-                  disabled={!areLocationsSelected}
-                  className="w-full bg-[#F26522] hover:bg-[#E55511] text-white py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_6px_rgba(0,0,0,0.1)] disabled:opacity-50 disabled:cursor-not-allowed font-medium text-base"
-                >
-                  <Search className="h-5 w-5" />
-                  Find Routes
-                </button>
-              </div>
-
               {/* Route List */}
-              {showRoutes && (
-                <RouteList
-                  routes={MOCK_ROUTES}
-                  selectedRouteIndex={selectedRouteIndex}
-                  onRouteSelect={setSelectedRouteIndex}
-                  onDetailsClick={handleRouteDetails}
-                />
+              {showRoutes && !showDetails && (
+                <div className="px-8 mt-6 space-y-3">
+                  {MOCK_ROUTES.map((route, index) => (
+                    <RouteCard
+                      key={index}
+                      route={route}
+                      isSelected={selectedRouteIndex === index}
+                      onClick={() => handleRouteClick(index)}
+                    />
+                  ))}
+                </div>
               )}
             </>
           )}

@@ -3,56 +3,90 @@ import { RouteOption } from '@/components/route/types';
 export const MOCK_ROUTES: RouteOption[] = [
   {
     id: '1',
+    departureTime: '2:05 PM',
+    arrivalTime: '2:25 PM',
+    duration: 30,
+    stops: [
+      {
+        name: 'Las Olas Oceanside Park',
+        time: '2:05 PM'
+      },
+      {
+        name: 'Las Olas & A1A',
+        time: '2:10 PM',
+        arrivalTime: '2:10 PM'
+      },
+      {
+        name: 'Las Olas & Seabreeze',
+        time: '2:15 PM',
+        arrivalTime: '2:15 PM'
+      },
+      {
+        name: 'Las Olas & Isle of Venice',
+        time: '2:25 PM',
+        arrivalTime: '2:25 PM'
+      }
+    ],
     segments: [{
       routeName: 'Beach Link',
       departureTime: '2:05 PM',
       arrivalTime: '2:25 PM',
-      stops: [
-        'Las Olas Oceanside Park',
-        'Las Olas & A1A',
-        'Las Olas & Seabreeze',
-        'Las Olas & Isle of Venice',
-      ],
-      schedule: 'Every 30 minutes, Monday to Sunday 9:30AM to 6:40PM',
+      schedule: 'Every 30 minutes'
     }],
-    duration: 30,
-    departureTime: '2:05 PM',
-    arrivalTime: '2:25 PM',
-    numTransfers: 0,
+    numTransfers: 0
   },
   {
     id: '2',
+    departureTime: '2:00 PM',
+    arrivalTime: '2:45 PM',
+    duration: 45,
+    stops: [
+      {
+        name: 'Central Terminal',
+        time: '2:00 PM'
+      },
+      {
+        name: 'Federal Courthouse',
+        time: '2:10 PM',
+        arrivalTime: '2:10 PM'
+      },
+      {
+        name: 'Las Olas & SE 3rd Ave',
+        time: '2:15 PM',
+        arrivalTime: '2:15 PM'
+      },
+      {
+        name: 'Las Olas & SE 8th Ave',
+        time: '2:25 PM',
+        arrivalTime: '2:25 PM'
+      },
+      {
+        name: 'Las Olas & Isle of Venice',
+        time: '2:35 PM',
+        arrivalTime: '2:35 PM'
+      },
+      {
+        name: 'Las Olas & A1A',
+        time: '2:45 PM',
+        arrivalTime: '2:45 PM'
+      }
+    ],
     segments: [
       {
         routeName: 'Downtown Link',
         departureTime: '2:00 PM',
         arrivalTime: '2:25 PM',
-        stops: [
-          'Central Terminal',
-          'Federal Courthouse',
-          'Las Olas & SE 3rd Ave',
-          'Las Olas & SE 8th Ave',
-        ],
-        schedule: 'Every 30 minutes, Monday to Friday 7:30AM to 6:00PM',
+        schedule: 'Every 30 minutes'
       },
       {
         routeName: 'Beach Link',
         departureTime: '2:25 PM',
         arrivalTime: '2:45 PM',
-        stops: [
-          'Las Olas & SE 8th Ave',
-          'Las Olas & Isle of Venice',
-          'Las Olas & Seabreeze',
-          'Las Olas & A1A',
-        ],
-        schedule: 'Every 30 minutes, Monday to Sunday 9:30AM to 6:40PM',
+        schedule: 'Every 30 minutes'
       }
     ],
-    duration: 45,
-    departureTime: '2:00 PM',
-    arrivalTime: '2:45 PM',
-    numTransfers: 1,
-  },
+    numTransfers: 1
+  }
 ];
 
 // Add more mock data as needed

@@ -1,23 +1,21 @@
 import { RouteCard } from './RouteCard';
 import { type RouteListProps } from './types';
 
-export function RouteList({ 
+export const RouteList = ({ 
   routes, 
   selectedRouteIndex, 
-  onRouteSelect, 
   onDetailsClick 
-}: RouteListProps) {
+}: RouteListProps) => {
   return (
-    <div className="px-8 mt-4 space-y-3">
+    <div className="px-8 mt-6 space-y-3">
       {routes.map((route, index) => (
         <RouteCard
-          key={route.id}
+          key={index}
           route={route}
           isSelected={selectedRouteIndex === index}
-          onClick={() => onRouteSelect(index)}
-          onDetailsClick={() => onDetailsClick(route)}
+          onClick={() => onDetailsClick(index)}
         />
       ))}
     </div>
   );
-} 
+}; 

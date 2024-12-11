@@ -1,13 +1,19 @@
 import React from 'react';
 import { type RouteCardProps } from './types';
 
-export function RouteCard({ route, isSelected, onClick, onDetailsClick }: RouteCardProps) {
-  const hasTransfer = route.segments.length > 1;
-
+export const RouteCard = ({ 
+  route, 
+  isSelected,
+  onClick
+}: RouteCardProps) => {
   return (
     <div 
-      className={`p-4 ${isSelected ? 'border-2 border-[#0052A5]' : 'border border-[#E5E7EB]'} rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer`}
       onClick={onClick}
+      className={`p-4 ${
+        isSelected 
+          ? 'border-2 border-[#0052A5]' 
+          : 'border border-[#E5E7EB]'
+      } rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-lg font-semibold text-[#374151]">
@@ -30,23 +36,12 @@ export function RouteCard({ route, isSelected, onClick, onDetailsClick }: RouteC
             </React.Fragment>
           ))}
         </div>
-        {hasTransfer && (
+        {route.numTransfers > 0 && (
           <span className="text-sm text-[#6B7280]">
             {route.numTransfers} transfer
           </span>
         )}
       </div>
-      {isSelected && (
-        <button 
-          className="text-[#0052A5] font-medium text-sm hover:text-[#004080] transition-colors duration-200 drop-shadow-sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDetailsClick();
-          }}
-        >
-          Details
-        </button>
-      )}
     </div>
   );
-} 
+}; 
